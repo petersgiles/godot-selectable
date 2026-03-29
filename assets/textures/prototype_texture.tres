@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://70e4inf6ewel"]
+
+[ext_resource type="Texture2D" uid="uid://cj85sw7s4ul6l" path="res://assets/textures/prototypebits_texture.png" id="1_25f5u"]
+
+[resource]
+resource_name = "prototype_texture"
+albedo_texture = ExtResource("1_25f5u")
+roughness = 0.4
