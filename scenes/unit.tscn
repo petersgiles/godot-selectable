@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://2kvgjkohqmcj"]
+
+[ext_resource type="Script" uid="uid://cecdaoamnp15r" path="res://scenes/unit.gd" id="1_k673f"]
+[ext_resource type="PackedScene" uid="uid://bygaratxwc33h" path="res://assets/dummy/Dummy_Base.gltf" id="2_1jvru"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sugp2"]
+
+[node name="Unit" type="CharacterBody3D" unique_id=1656501836]
+script = ExtResource("1_k673f")
+
+[node name="Dummy_Base2" parent="." unique_id=185875954 instance=ExtResource("2_1jvru")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1178293550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_sugp2")

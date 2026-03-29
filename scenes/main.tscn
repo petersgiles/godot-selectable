@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://uxlf1vol0wey"]
 
 [ext_resource type="MeshLibrary" uid="uid://dh7m50yck8jxw" path="res://assets/libs/prototype.meshlib" id="1_o5qli"]
-[ext_resource type="PackedScene" uid="uid://bygaratxwc33h" path="res://assets/dummy/Dummy_Base.gltf" id="2_0wfyh"]
-[ext_resource type="Script" uid="uid://cecdaoamnp15r" path="res://scenes/unit.gd" id="2_sugp2"]
+[ext_resource type="Script" uid="uid://bm1e8cxp27aho" path="res://scenes/main.gd" id="1_sugp2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -17,9 +16,8 @@ sky = SubResource("Sky_sugp2")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sugp2"]
-
 [node name="Main" type="Node3D" unique_id=1745421302]
+script = ExtResource("1_sugp2")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2022212327]
 environment = SubResource("Environment_jyhfs")
@@ -37,29 +35,10 @@ data = {
 }
 
 [node name="Units" type="Node" parent="." unique_id=1594126824]
-
-[node name="Dummy01" type="CharacterBody3D" parent="Units" unique_id=1698321707]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0715351, 1.9735646, 0)
-script = ExtResource("2_sugp2")
-
-[node name="Dummy_Base2" parent="Units/Dummy01" unique_id=185875954 instance=ExtResource("2_0wfyh")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Units/Dummy01" unique_id=1360436982]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_sugp2")
-
-[node name="Dummy02" type="CharacterBody3D" parent="Units" unique_id=1380540534]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6894693, 1.9735646, 0)
-script = ExtResource("2_sugp2")
-
-[node name="Dummy_Base2" parent="Units/Dummy02" unique_id=1285159976 instance=ExtResource("2_0wfyh")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Units/Dummy02" unique_id=7617459]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_sugp2")
+unique_name_in_owner = true
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=826400393]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.2382283, 4.4376335)
+transform = Transform3D(1, 0, 0, 0, 0.7850792, 0.61939543, 0, -0.61939543, 0.7850792, 0, 7.3075843, 10.178205)
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=265673313]
 
