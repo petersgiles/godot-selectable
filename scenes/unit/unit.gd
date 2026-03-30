@@ -6,51 +6,46 @@ class_name Unit
 @export var stop_distance: float = 0.15
 @export var facing_yaw_offset: float = 0.0
 
-enum MoveState {
-	IDLE,
-	WALK,
-}
-
-var _move_state: MoveState = MoveState.IDLE
 var _move_target: Vector3 = Vector3.ZERO
+
+@onready var animation_player: AnimationPlayer = $Visuals/AnimationPlayer
+@onready var state_machine: StateMachine = $StateMachine
 
 
 func command_move_to(target_position: Vector3) -> void:
 	_move_target = target_position
-	_move_state = MoveState.WALK
+	state_machine.transition_to("Walk", {"target_position": target_position})
 
 
 func command_look_at(target_position: Vector3) -> void:
 	_face_towards(target_position)
-	_move_state = MoveState.IDLE
-	velocity.x = 0.0
-	velocity.z = 0.0
+	state_machine.transition_to("Idle")
 
 
 func face_towards(target_position: Vector3) -> void:
 	_face_towards(target_position)
 
 
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
+func set_move_target(target_position: Vector3) -> void:
+	_move_target = target_position
+
+
+func get_move_target() -> Vector3:
+	return _move_target
+
+
+func apply_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 
-	if _move_state == MoveState.WALK:
-		var to_target := Vector3(_move_target.x - global_position.x, 0.0, _move_target.z - global_position.z)
-		if to_target.length() <= stop_distance:
-			_move_state = MoveState.IDLE
-			velocity.x = 0.0
-			velocity.z = 0.0
-		else:
-			var direction := to_target.normalized()
-			velocity.x = direction.x * move_speed
-			velocity.z = direction.z * move_speed
-			_face_towards(global_position + direction)
-	else:
-		velocity.x = move_toward(velocity.x, 0.0, move_speed)
-		velocity.z = move_toward(velocity.z, 0.0, move_speed)
 
+func apply_idle_damping(delta: float) -> void:
+	var damping: float = move_speed * maxf(delta, 0.0001) * 60.0
+	velocity.x = move_toward(velocity.x, 0.0, damping)
+	velocity.z = move_toward(velocity.z, 0.0, damping)
+
+
+func move_with_current_velocity() -> void:
 	move_and_slide()
 
 
