@@ -2,7 +2,9 @@
 
 [ext_resource type="MeshLibrary" uid="uid://dh7m50yck8jxw" path="res://assets/libs/prototype.meshlib" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://bm1e8cxp27aho" path="res://scenes/main.gd" id="1_sugp2"]
+[ext_resource type="Script" path="res://scenes/selection_bus.gd" id="2_yisjc"]
 [ext_resource type="Script" uid="uid://cw4ycuvfh3x8c" path="res://scenes/units.gd" id="3_sugp2"]
+[ext_resource type="Script" path="res://scenes/selection_hud_presenter.gd" id="4_7ndu8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0wfyh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -38,6 +40,13 @@ data = {
 [node name="Units" type="Node" parent="." unique_id=1594126824]
 unique_name_in_owner = true
 script = ExtResource("3_sugp2")
+
+[node name="SelectionBus" type="Node" parent="." unique_id=1783624411]
+unique_name_in_owner = true
+script = ExtResource("2_yisjc")
+
+[node name="SelectionHudPresenter" type="Node" parent="." unique_id=1950071149]
+script = ExtResource("4_7ndu8")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=826400393]
 transform = Transform3D(1, 0, 0, 0, 0.7850792, 0.61939543, 0, -0.61939543, 0.7850792, 0, 7.3075843, 10.178205)

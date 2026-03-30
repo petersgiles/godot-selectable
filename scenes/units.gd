@@ -1,7 +1,7 @@
 extends Node
 class_name Units
 
-@onready var top_center_label: Label = %TopCenterLabel
+@onready var selection_bus = %SelectionBus
 
 var _selectables: Array = []
 var _current_selection_index: int = -1
@@ -12,6 +12,13 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
+			_handle_left_click(mouse_event.position)
+			get_viewport().set_input_as_handled()
+			return
+
 	if event is InputEventKey:
 		var key_event := event as InputEventKey
 		if key_event.pressed and not key_event.echo:
@@ -44,23 +51,15 @@ func refresh_selectables() -> void:
 	if _current_selection_index >= _selectables.size():
 		_current_selection_index = -1
 
-	_update_selection_label()
-
 
 func select_all_in_group(group_name: String) -> void:
-	deselect_all()
-	for selectable in _selectables:
-		if selectable.is_in_selectable_group(group_name):
-			selectable.set_selected(true)
+	selection_bus.request_group(group_name)
 	_current_selection_index = -1
-	_update_selection_label()
 
 
 func deselect_all() -> void:
-	for selectable in _selectables:
-		selectable.set_selected(false)
+	selection_bus.request_clear()
 	_current_selection_index = -1
-	_update_selection_label()
 
 
 func get_selectables_in_group(group_name: String) -> Array:
@@ -80,28 +79,41 @@ func _cycle_single_selection(step: int) -> void:
 	else:
 		_current_selection_index = posmod(_current_selection_index + step, _selectables.size())
 
-	for i in range(_selectables.size()):
-		_selectables[i].set_selected(i == _current_selection_index)
-
-	_update_selection_label()
+	selection_bus.request_set(_selectables[_current_selection_index])
 
 
-func _update_selection_label() -> void:
-	if top_center_label == null:
+func _handle_left_click(mouse_position: Vector2) -> void:
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
 		return
 
-	if _current_selection_index >= 0 and _current_selection_index < _selectables.size():
-		var selected_owner: Node = _selectables[_current_selection_index].get_parent()
-		top_center_label.text = "selected: %s" % selected_owner.name
+	var ray_origin := camera.project_ray_origin(mouse_position)
+	var ray_end := ray_origin + camera.project_ray_normal(mouse_position) * 1000.0
+	var query := PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
+	var result := get_viewport().world_3d.direct_space_state.intersect_ray(query)
+
+	if result.is_empty():
+		deselect_all()
 		return
 
-	var selected_names: PackedStringArray = []
-	for selectable in _selectables:
-		if selectable.is_selected:
-			var selected_parent: Node = selectable.get_parent()
-			selected_names.append(selected_parent.name)
+	var hit_selectable := _find_selectable_from_collider(result.get("collider"))
+	if hit_selectable == null:
+		deselect_all()
+		return
 
-	if selected_names.is_empty():
-		top_center_label.text = "placeholder"
-	else:
-		top_center_label.text = "selected: %s" % ", ".join(selected_names)
+	_current_selection_index = _selectables.find(hit_selectable)
+	selection_bus.request_set(hit_selectable)
+
+
+func _find_selectable_from_collider(collider: Variant) -> Node:
+	if not (collider is Node):
+		return null
+
+	var current: Node = collider
+	while current != null and current != self:
+		var selectable := current.get_node_or_null("Selectable")
+		if selectable != null:
+			return selectable
+		current = current.get_parent()
+
+	return null
