@@ -39,8 +39,10 @@ func _ready() -> void:
 			var angle := TAU * float(i) / float(number_of_units)
 			var circle_pos := Vector3(cos(angle), 0.0, sin(angle)) * spawn_radius
 			unit_3d.position = Vector3(circle_pos.x, floor_y, circle_pos.z)
-			unit_3d.look_at(unit_3d.position + circle_pos.normalized(), Vector3.UP)
-			unit_3d.rotate_y(PI)
+			if unit_3d is Unit:
+				(unit_3d as Unit).face_towards(unit_3d.position + circle_pos.normalized())
+			else:
+				unit_3d.look_at(unit_3d.position + circle_pos.normalized(), Vector3.UP)
 
 	units_handler.refresh_selectables()
 

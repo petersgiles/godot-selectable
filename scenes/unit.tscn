@@ -8,6 +8,7 @@
 
 [node name="Unit" type="CharacterBody3D" unique_id=1656501836]
 script = ExtResource("1_k673f")
+facing_yaw_offset = 3.14159
 
 [node name="Selectable" type="Node" parent="." unique_id=1046673200]
 script = ExtResource("2_jy5wi")

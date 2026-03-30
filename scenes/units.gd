@@ -22,6 +22,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		var key_event := event as InputEventKey
 		if key_event.pressed and not key_event.echo:
+			if key_event.keycode == KEY_ESCAPE:
+				deselect_all()
+				get_viewport().set_input_as_handled()
+				return
 			if key_event.keycode == KEY_1:
 				select_all_in_group("friend")
 				get_viewport().set_input_as_handled()
@@ -91,18 +95,46 @@ func _handle_left_click(mouse_position: Vector2) -> void:
 	var ray_end := ray_origin + camera.project_ray_normal(mouse_position) * 1000.0
 	var query := PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
 	var result := get_viewport().world_3d.direct_space_state.intersect_ray(query)
+	var selected_units := _get_selected_units()
 
 	if result.is_empty():
-		deselect_all()
+		if selected_units.is_empty():
+			deselect_all()
 		return
 
 	var hit_selectable := _find_selectable_from_collider(result.get("collider"))
+	if not selected_units.is_empty():
+		if hit_selectable != null:
+			var target_unit := hit_selectable.get_parent()
+			if target_unit is Unit and selected_units.has(target_unit):
+				deselect_all()
+				return
+			if target_unit is Unit and not selected_units.has(target_unit):
+				for selected_unit in selected_units:
+					selected_unit.command_look_at(target_unit.global_position)
+			return
+
+		for selected_unit in selected_units:
+			selected_unit.command_move_to(result.position)
+		return
+
 	if hit_selectable == null:
 		deselect_all()
 		return
 
 	_current_selection_index = _selectables.find(hit_selectable)
 	selection_bus.request_set(hit_selectable)
+
+
+func _get_selected_units() -> Array:
+	var selected_units: Array = []
+	for selectable in _selectables:
+		if not selectable.is_selected:
+			continue
+		var unit_node: Node = selectable.get_parent()
+		if unit_node is Unit:
+			selected_units.append(unit_node)
+	return selected_units
 
 
 func _find_selectable_from_collider(collider: Variant) -> Node:
