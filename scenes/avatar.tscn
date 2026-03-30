@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://c62r4g0kkqr01"]
+
+[ext_resource type="Texture2D" uid="uid://dt2qfn53oeq08" path="res://assets/Mannequin Character/avatar.png" id="1_l64a6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5ysmq"]
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_6fi6k"]
+font_color = Color(1, 1, 0.039215688, 1)
+outline_size = 1
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+
+[node name="Avatar" type="MarginContainer" unique_id=422721162]
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = -1
+anchor_right = 0.056
+anchor_bottom = 0.09900001
+offset_right = -17.512001
+offset_bottom = -32.152008
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=118715714]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1685329794]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="HBoxContainer/MarginContainer" unique_id=410685551]
+layout_mode = 2
+texture = ExtResource("1_l64a6")
+expand_mode = 2
+
+[node name="Selected" type="Label" parent="HBoxContainer/MarginContainer" unique_id=1889780211]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "★"
+label_settings = SubResource("LabelSettings_5ysmq")
+
+[node name="Name" type="Label" parent="HBoxContainer" unique_id=2076610203]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "NAME"
+label_settings = SubResource("LabelSettings_6fi6k")

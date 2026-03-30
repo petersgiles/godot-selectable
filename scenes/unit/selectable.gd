@@ -6,36 +6,30 @@ signal selected_changed(is_selected: bool)
 @export var selectable_group: String = "units"
 
 var is_selected: bool = false
-var _selection_bus: Node
-
 
 func _ready() -> void:
 	add_to_group("selectable")
 	if not selectable_group.is_empty():
 		add_to_group(_group_tag(selectable_group))
 
-	_selection_bus = get_tree().get_first_node_in_group("selection_bus")
-	if _selection_bus == null:
-		return
-
-	_selection_bus.selection_set_requested.connect(_on_selection_set_requested)
-	_selection_bus.selection_toggle_requested.connect(_on_selection_toggle_requested)
-	_selection_bus.selection_clear_requested.connect(_on_selection_clear_requested)
-	_selection_bus.selection_group_requested.connect(_on_selection_group_requested)
+	SelectionBus.selection_set_requested.connect(_on_selection_set_requested)
+	SelectionBus.selection_toggle_requested.connect(_on_selection_toggle_requested)
+	SelectionBus.selection_clear_requested.connect(_on_selection_clear_requested)
+	SelectionBus.selection_group_requested.connect(_on_selection_group_requested)
 
 
 func _exit_tree() -> void:
-	if _selection_bus == null:
+	if SelectionBus == null:
 		return
 
-	if _selection_bus.selection_set_requested.is_connected(_on_selection_set_requested):
-		_selection_bus.selection_set_requested.disconnect(_on_selection_set_requested)
-	if _selection_bus.selection_toggle_requested.is_connected(_on_selection_toggle_requested):
-		_selection_bus.selection_toggle_requested.disconnect(_on_selection_toggle_requested)
-	if _selection_bus.selection_clear_requested.is_connected(_on_selection_clear_requested):
-		_selection_bus.selection_clear_requested.disconnect(_on_selection_clear_requested)
-	if _selection_bus.selection_group_requested.is_connected(_on_selection_group_requested):
-		_selection_bus.selection_group_requested.disconnect(_on_selection_group_requested)
+	if SelectionBus.selection_set_requested.is_connected(_on_selection_set_requested):
+		SelectionBus.selection_set_requested.disconnect(_on_selection_set_requested)
+	if SelectionBus.selection_toggle_requested.is_connected(_on_selection_toggle_requested):
+		SelectionBus.selection_toggle_requested.disconnect(_on_selection_toggle_requested)
+	if SelectionBus.selection_clear_requested.is_connected(_on_selection_clear_requested):
+		SelectionBus.selection_clear_requested.disconnect(_on_selection_clear_requested)
+	if SelectionBus.selection_group_requested.is_connected(_on_selection_group_requested):
+		SelectionBus.selection_group_requested.disconnect(_on_selection_group_requested)
 
 
 func set_selected(value: bool) -> void:

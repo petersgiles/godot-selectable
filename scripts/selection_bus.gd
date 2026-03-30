@@ -1,5 +1,4 @@
 extends Node
-class_name SelectionBus
 
 signal selection_set_requested(target_selectable: Node)
 signal selection_toggle_requested(target_selectable: Node)
@@ -8,7 +7,7 @@ signal selection_group_requested(group_name: String)
 
 
 func _ready() -> void:
-	add_to_group("selection_bus")
+	add_to_group("SelectionBus")
 
 
 func request_set(target_selectable: Node) -> void:

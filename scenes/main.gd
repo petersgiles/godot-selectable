@@ -4,15 +4,15 @@ extends Node3D
 @export var spawn_radius: float = 5.0
 @export var floor_y: float = 0.0
 
-const UNIT_SCENE: PackedScene = preload("res://scenes/unit.tscn")
-@onready var units: Node = %Units
-@onready var units_handler: Units = %Units
+const UNIT_SCENE: PackedScene = preload("res://scenes/unit/unit.tscn")
+@onready var units_handler: Node = %Units
+
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# Clear previously spawned units to keep scene reloads deterministic.
-	for child in units.get_children():
+	for child in units_handler.get_children():
 		child.queue_free()
 
 	if number_of_units <= 0:
@@ -31,7 +31,7 @@ func _ready() -> void:
 		var selectable := unit_instance.get_node_or_null("Selectable")
 		if selectable != null:
 			selectable.selectable_group = assigned_group
-		units.add_child(unit_instance, true)
+		units_handler.add_child(unit_instance, true)
 		unit_instance.add_to_group(assigned_group)
 
 		if unit_instance is Node3D:
